@@ -13,7 +13,7 @@ API_KEY = os.environ.get('OPENAI_API_KEY')
 # WebSocket URLとヘッダー情報
 WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01"
 HEADERS = {
-    "Authorization": "Bearer "+API_KEY,  # あなたのAPIキーに置き換えてください
+    "Authorization": "Bearer " + API_KEY, 
     "OpenAI-Beta": "realtime=v1"
 }
 
@@ -36,7 +36,6 @@ async def send_audio(websocket, stream, CHUNK):
     print("マイクから音声を取得して送信中...")
     while True:
         # マイクから音声を取得
-        
         audio_data = await asyncio.get_event_loop().run_in_executor(None, read_audio_block)
         if audio_data is None:
                 continue  # 読み取りに失敗した場合はスキップ
@@ -52,6 +51,7 @@ async def send_audio(websocket, stream, CHUNK):
         # WebSocketで音声データを送信
         await websocket.send(json.dumps(audio_event))
 
+        #TODO:本当に下記の文がいるか確認。再生と送信がどちらも非同期に同時に行われているかどうかをちゃんと確認する（printで）
         await asyncio.sleep(0)
 
 # サーバーから音声を受信して再生する非同期関数
@@ -90,6 +90,7 @@ async def receive_audio(websocket, output_stream):
                 base64_audio_response = response_data["delta"]
                 if base64_audio_response:
                     pcm16_audio = base64_to_pcm16(base64_audio_response)
+                    #音声データがある場合は、出力ストリームから再生
                     await loop.run_in_executor(None, output_stream.write, pcm16_audio)
                     #print("サーバーからの音声を再生中...")
 
@@ -147,7 +148,6 @@ async def stream_audio_and_receive_response():
             send_task = asyncio.create_task(send_audio(websocket, stream, CHUNK))
             receive_task = asyncio.create_task(receive_audio(websocket, output_stream))
 
-            print("タスクが作成されました")  # ここでタスク作成を確認
             # タスクが終了するまで待機
             await asyncio.gather(send_task, receive_task)
 
@@ -163,6 +163,6 @@ async def stream_audio_and_receive_response():
             output_stream.close()
             p.terminate()
 
-# メイン関数
+
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(stream_audio_and_receive_response())

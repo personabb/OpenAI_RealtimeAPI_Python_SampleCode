@@ -9,11 +9,13 @@ import io
 import os
 
 API_KEY = os.environ.get('OPENAI_API_KEY')
+#わからない人は、上の行をコメントアウトして、下記のように直接API KEYを書き下してもよい
+#API_KEY = "sk-xxxxx"
 
 # WebSocket URLとヘッダー情報
 WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01"
 HEADERS = {
-    "Authorization": "Bearer " + API_KEY, 
+    "Authorization": "Bearer "+ API_KEY, 
     "OpenAI-Beta": "realtime=v1"
 }
 
@@ -27,7 +29,6 @@ async def send_audio(websocket, stream, CHUNK):
     def read_audio_block():
         """同期的に音声データを読み取る関数"""
         try:
-            #print("マイクから音声を取得して送信中...")
             return stream.read(CHUNK, exception_on_overflow=False)
         except Exception as e:
             print(f"音声読み取りエラー: {e}")
@@ -38,7 +39,7 @@ async def send_audio(websocket, stream, CHUNK):
         # マイクから音声を取得
         audio_data = await asyncio.get_event_loop().run_in_executor(None, read_audio_block)
         if audio_data is None:
-                continue  # 読み取りに失敗した場合はスキップ
+            continue  # 読み取りに失敗した場合はスキップ
         
         # PCM16データをBase64にエンコード
         base64_audio = base64.b64encode(audio_data).decode("utf-8")
@@ -51,12 +52,10 @@ async def send_audio(websocket, stream, CHUNK):
         # WebSocketで音声データを送信
         await websocket.send(json.dumps(audio_event))
 
-        #TODO:本当に下記の文がいるか確認。再生と送信がどちらも非同期に同時に行われているかどうかをちゃんと確認する（printで）
         await asyncio.sleep(0)
 
 # サーバーから音声を受信して再生する非同期関数
 async def receive_audio(websocket, output_stream):
-    print("サーバーからの音声を受信して再生中...")
     print("assistant: ", end = "", flush = True)
     loop = asyncio.get_event_loop()
     while True:
@@ -64,25 +63,18 @@ async def receive_audio(websocket, output_stream):
         response = await websocket.recv()
         response_data = json.loads(response)
 
-        """if "type" in response_data and response_data["type"] != "response.audio.delta":
-            print(f"Received response: {response_data}")"""
-
-        # サーバーからの応答をリアルタイムに表示
+        # サーバーからの応答をリアルタイム（ストリーム）で表示
         if "type" in response_data and response_data["type"] == "response.audio_transcript.delta":
             print(response_data["delta"], end = "", flush = True)
         # サーバからの応答が完了したことを取得
         elif "type" in response_data and response_data["type"] == "response.audio_transcript.done":
             print("\nassistant: ", end = "", flush = True)
-        #ユーザ発話の文字起こしを出力
+        # ユーザ発話の文字起こしを出力
         elif "type" in response_data and response_data["type"] == "conversation.item.input_audio_transcription.completed":
             print("\n↪︎by user messages: ", response_data["transcript"])
         # レートリミットの情報を取得
         elif "type" in response_data and response_data["type"] == "rate_limits.updated":
-            if response_data["rate_limits"][0]["remaining"] == 0:
-                print(f"Rate limits: {response_data['rate_limits'][0]['remaining']} requests remaining.")
-
-
-        #print(response_data["type"])
+            print(f"Rate limits: {response_data['rate_limits'][0]['remaining']} requests remaining.")
 
         # サーバーからの応答に音声データが含まれているか確認
         if "delta" in response_data:
@@ -92,7 +84,6 @@ async def receive_audio(websocket, output_stream):
                     pcm16_audio = base64_to_pcm16(base64_audio_response)
                     #音声データがある場合は、出力ストリームから再生
                     await loop.run_in_executor(None, output_stream.write, pcm16_audio)
-                    #print("サーバーからの音声を再生中...")
 
 # マイクからの音声を取得し、WebSocketで送信しながらサーバーからの音声応答を再生する非同期関数
 async def stream_audio_and_receive_response():
@@ -105,25 +96,11 @@ async def stream_audio_and_receive_response():
             "type": "response.create",
             "response": {
                 "modalities": ["audio", "text"],
-                "instructions": "関西弁で回答してください。",
+                "instructions": "ユーザーをサポートしてください。",
                 "voice": "echo" #"alloy", "echo", "shimmer"
             }
         }
-
         await websocket.send(json.dumps(init_request))
-
-        #ユーザ発話の文字認識を有効にする場合は下記が必要
-        update_request = {
-            "type": "session.update",
-            "session": {
-                "input_audio_transcription":{
-                    "model": "whisper-1"
-                }
-            }
-        }
-        await websocket.send(json.dumps(update_request))
-        
-        
         print("初期リクエストを送信しました。")
         
         # PyAudioの設定

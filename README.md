@@ -9,11 +9,15 @@
 
  https://zenn.dev/asap/articles/4368fd306b592a
 
+ユーザ割り込みも実装しました（main_with_CutIn.py）
+
+ https://zenn.dev/asap/articles/563500af4649da
+
 ## 実行方法
 
 ```
 pip install websockets　soundfile　numpy　pyaudio
-python main.py
+python main.py or main_with_CutIn.py
 ```
 
 ## 記事からの更新

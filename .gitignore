@@ -180,6 +180,6 @@ env*/
 .DS_Store
 *.DS_Store
 */.DS_Store
-./main_private.py
-./main_with_CutIn_private.py
+main_private.py
+main_with_CutIn_private.py
 private/

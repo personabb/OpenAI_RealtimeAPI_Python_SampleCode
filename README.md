@@ -13,11 +13,18 @@
 
  https://zenn.dev/asap/articles/563500af4649da
 
+過去の会話履歴を自動的に削除する機能を追加したサンプルコードもも追加しました。（main_with_CutIn_HistryDelete.py）
+
+https://zenn.dev/asap/articles/af07fcedbbef61
+ 
+
 ## 実行方法
 
 ```
 pip install websockets　soundfile　numpy　pyaudio
-python main.py or main_with_CutIn.py
+```
+```
+python main.py or main_with_CutIn.py or main_with_CutIn_HistryDelete.py
 ```
 
 ## 記事からの更新

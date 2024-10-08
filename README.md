@@ -23,6 +23,8 @@ https://zenn.dev/asap/articles/af07fcedbbef61
 ```
 pip install websockets　soundfile　numpy　pyaudio
 ```
+
+下記のどれかを実行する。
 ```
 python main.py
 ```
@@ -31,6 +33,7 @@ python main.py
 main_with_CutIn.py
 ```
  or
+ ```
 main_with_CutIn_HistryDelete.py
 ```
 

@@ -182,4 +182,5 @@ env*/
 */.DS_Store
 main_private.py
 main_with_CutIn_private.py
+main_with_CutIn_HistryDelete_private.py
 private/

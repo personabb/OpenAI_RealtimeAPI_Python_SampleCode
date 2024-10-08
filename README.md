@@ -24,7 +24,14 @@ https://zenn.dev/asap/articles/af07fcedbbef61
 pip install websockets　soundfile　numpy　pyaudio
 ```
 ```
-python main.py or main_with_CutIn.py or main_with_CutIn_HistryDelete.py
+python main.py
+```
+ or
+ ```
+main_with_CutIn.py
+```
+ or
+main_with_CutIn_HistryDelete.py
 ```
 
 ## 記事からの更新

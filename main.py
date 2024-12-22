@@ -13,7 +13,8 @@ API_KEY = os.environ.get('OPENAI_API_KEY')
 #API_KEY = "sk-xxxxx"
 
 # WebSocket URLとヘッダー情報
-WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01"
+# WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01"
+WS_URL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17"
 HEADERS = {
     "Authorization": "Bearer "+ API_KEY, 
     "OpenAI-Beta": "realtime=v1"

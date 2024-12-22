@@ -98,7 +98,7 @@ async def stream_audio_and_receive_response():
             "response": {
                 "modalities": ["audio", "text"],
                 "instructions": "ユーザーをサポートしてください。",
-                "voice": "echo" #"alloy", "echo", "shimmer"
+                "voice": "echo" #"alloy", "echo", "shimmer", "ash", "ballad","coral","sage","verse"
             }
         }
         await websocket.send(json.dumps(init_request))

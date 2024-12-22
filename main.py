@@ -89,7 +89,7 @@ async def receive_audio(websocket, output_stream):
 # マイクからの音声を取得し、WebSocketで送信しながらサーバーからの音声応答を再生する非同期関数
 async def stream_audio_and_receive_response():
     # WebSocketに接続
-    async with websockets.connect(WS_URL, extra_headers=HEADERS) as websocket:
+    async with websockets.connect(WS_URL, additional_headers=HEADERS) as websocket:
         print("WebSocketに接続しました。")
 
         # 初期リクエスト (モダリティ設定)

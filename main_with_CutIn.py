@@ -113,7 +113,7 @@ async def stream_audio_and_receive_response():
             "session": {
                 "modalities": ["audio", "text"],
                 "instructions": "日本語かつ関西弁で回答してください。",
-                "voice": "alloy",
+                "voice": "alloy", #"alloy", "echo", "shimmer", "ash", "ballad","coral","sage","verse"
                 "turn_detection": {
                     "type": "server_vad",
                     "threshold": 0.5,

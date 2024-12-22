@@ -1,0 +1,6 @@
+cffi==1.17.1
+numpy==2.2.1
+PyAudio==0.2.14
+pycparser==2.22
+soundfile==0.12.1
+websockets==14.1
